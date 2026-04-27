@@ -202,9 +202,10 @@ tbody tr:last-child td{border-bottom:none}
     <div class="card"><div class="card-head"><h3>Top Locations</h3><div class="hint">By count</div></div><div class="card-body" id="locBars"></div></div>
     <div class="card"><div class="card-head"><h3>Top Vendors</h3><div class="hint">By count</div></div><div class="card-body" id="vendorBars"></div></div>
   </div>
-  <div class="row r2">
+  <div class="row r3">
     <div class="card"><div class="card-head"><h3>Owner Volume</h3><div class="hint">Open WO count</div></div><div class="card-body" id="ownerBars"></div></div>
     <div class="card"><div class="card-head"><h3>Avg Age by Owner</h3><div class="hint">Days · sorted highest first</div></div><div class="card-body" id="ownerAgeBars"></div></div>
+    <div class="card"><div class="card-head"><h3>Flagged by Owner</h3><div class="hint">Overdue + No follow-up (7+ days)</div></div><div class="card-body" id="ownerFlagBars"></div></div>
   </div>
 </div>
 
@@ -364,6 +365,32 @@ document.getElementById('ownerAgeBars').innerHTML = ownerAge.map(x => {
     <div><div class="age-owner-name">${esc(x.name)}</div><div class="age-owner-ct">${x.count} WOs</div></div>
     <div class="bar-track"><div class="bar ${col}" style="width:${(x.avgAge/ageMaxO)*100}%"></div></div>
     <div><div class="age-owner-val">${x.avgAge}<span class="unit">d</span></div><div class="age-owner-detail">med ${x.medianAge} · max ${x.maxAge}</div></div>
+  </div>`;
+}).join('');
+
+// Flagged by owner bars on overview
+const flagOwnerData = data.flaggedByOwner.map(g => {
+  const ov = g.items.filter(x => x.flagType==='pastFollowUp').length;
+  const nf = g.items.filter(x => x.flagType==='noFollowUp').length;
+  return {name: g.owner, total: g.items.length, overdue: ov, nofu: nf};
+}).sort((a,b) => b.total - a.total);
+const flagMax = Math.max(...flagOwnerData.map(x => x.total), 1);
+document.getElementById('ownerFlagBars').innerHTML = flagOwnerData.map(x => {
+  const ovPct = (x.overdue / flagMax) * 100;
+  const nfPct = (x.nofu / flagMax) * 100;
+  return `<div style="padding:8px 0;border-bottom:1px solid var(--border)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+      <span style="font-size:12.5px;font-weight:600;color:var(--text)">${esc(x.name)}</span>
+      <span class="mono" style="font-size:13px;font-weight:700">${x.total}</span>
+    </div>
+    <div style="display:flex;gap:2px;height:16px;border-radius:4px;overflow:hidden;background:var(--mcgreen-light)">
+      ${x.overdue ? `<div style="width:${ovPct}%;background:var(--red);border-radius:3px 0 0 3px" title="${x.overdue} overdue"></div>` : ''}
+      ${x.nofu ? `<div style="width:${nfPct}%;background:var(--amber)" title="${x.nofu} no follow-up"></div>` : ''}
+    </div>
+    <div style="display:flex;gap:12px;margin-top:4px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3)">
+      ${x.overdue ? `<span style="color:var(--red)">${x.overdue} overdue</span>` : ''}
+      ${x.nofu ? `<span style="color:var(--amber)">${x.nofu} no follow-up</span>` : ''}
+    </div>
   </div>`;
 }).join('');
 
