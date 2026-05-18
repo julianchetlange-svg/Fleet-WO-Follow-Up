@@ -313,6 +313,30 @@ function avgAgeSparkline() {
     +`</svg></div>`;
 }
 
+const repairAvgTrend = [
+  {week:'5/4',val:16.2},
+  {week:'5/11',val:15.7},
+  {week:'5/18',val:15.7}
+];
+function repairAvgSparkline() {
+  const w=90,h=28,pad=4;
+  const vals = repairAvgTrend.map(d=>d.val);
+  const mn=Math.min(...vals)-1, mx=Math.max(...vals)+1;
+  const xStep=(w-pad*2)/(vals.length-1);
+  const yScale=v=>(h-pad*2)*(1-(v-mn)/(mx-mn))+pad;
+  const pts=vals.map((v,i)=>`${pad+i*xStep},${yScale(v)}`).join(' ');
+  const dots=repairAvgTrend.map((d,i)=>{
+    const cx=pad+i*xStep, cy=yScale(d.val);
+    const isLast=i===vals.length-1;
+    return `<circle cx="${cx}" cy="${cy}" r="${isLast?3.5:2.5}" fill="${isLast?'var(--red)':'var(--text3)'}"/>`
+             +`<text x="${cx}" y="${cy-5}" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="var(--text3)">${d.val}d</text>`
+             +`<text x="${cx}" y="${h-1}" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="var(--text3)">${d.week}</text>`;
+  }).join('');
+  return `<div style="margin-top:6px"><svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" style="overflow:visible">`
+    +`<polyline points="${pts}" fill="none" stroke="var(--red)" stroke-width="1.5" stroke-linejoin="round" stroke-opacity="0.6"/>`
+    +dots
+    +`</svg></div>`;
+}
 function wowBadge(cur, prevVal, lowerIsBetter) {
   const diff = cur - prevVal;
   if (diff === 0) return '';
@@ -327,7 +351,7 @@ function wowBadge(cur, prevVal, lowerIsBetter) {
 document.getElementById('kpis').innerHTML = [
   {l:'Open Total',v:k.total,s:'All classes',c:'',wow:wowBadge(k.total,prev.total,true)},
   {l:'PM',v:k.pm,s:pct(k.pm,k.total)+'% of total',c:'',wow:''},
-  {l:'Repair',v:k.repair,s:'Avg '+k.repairAvgAge+'d',c:'',wow:''},
+  {l:'Repair',v:k.repair,s:'Avg '+k.repairAvgAge+'d'+repairAvgSparkline(),c:'',wow:''},
   {l:'Avg Age',v:k.avgAge+'<span style="font-size:14px;font-weight:400;color:var(--text3)">d</span>',s:'Median '+k.medianAge+'d'+avgAgeSparkline(),c:'',wow:wowBadge(k.avgAge,prev.avgAge,true)},
   {l:'30+ Days',v:k.over30,s:pct(k.over30,k.total)+'%',c:k.over30>0?'amber':'green',wow:wowBadge(k.over30,prev.over30,true)},
   {l:'Flagged',v:totalFlagged,s:'Overdue or no follow-up',c:'red',wow:''},
