@@ -161,6 +161,47 @@ tbody tr:last-child td{border-bottom:none}
 .age-owner-val .unit{font-size:10px;font-weight:400;color:var(--text3);margin-left:2px}
 .age-owner-detail{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text3);text-align:right}
 
+/* RECOGNITION SPOTLIGHTS */
+.spotlight{position:relative;border-radius:var(--radius);overflow:hidden;padding:16px 18px;display:flex;gap:16px;align-items:center;border:1px solid var(--border)}
+.spotlight .medal{width:54px;height:54px;border-radius:12px;display:grid;place-items:center;font-size:26px;flex-shrink:0;box-shadow:0 2px 8px rgba(26,43,31,.12)}
+.spotlight .sp-body{min-width:0;flex:1}
+.spotlight .sp-kicker{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px}
+.spotlight .sp-name{font-size:20px;font-weight:700;letter-spacing:-.02em;color:var(--text);line-height:1.1}
+.spotlight .sp-why{font-size:11.5px;color:var(--text2);margin-top:5px;line-height:1.35}
+.spotlight .sp-stats{display:flex;gap:14px;margin-top:9px;flex-wrap:wrap}
+.spotlight .sp-stat{font-family:'JetBrains Mono',monospace}
+.spotlight .sp-stat .v{font-size:15px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
+.spotlight .sp-stat .l{font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);display:block;margin-top:1px}
+.spotlight.gold{background:linear-gradient(135deg,var(--mcyellow-light),#fff);border-color:var(--mcyellow)}
+.spotlight.gold .medal{background:linear-gradient(135deg,var(--mcyellow),var(--mcyellow-dark));color:#fff}
+.spotlight.gold .sp-kicker{color:var(--mcyellow-dark)}
+.spotlight.green{background:linear-gradient(135deg,var(--mcgreen-light),#fff);border-color:var(--mcgreen)}
+.spotlight.green .medal{background:linear-gradient(135deg,var(--mcgreen),var(--mcgreen-dark));color:#fff}
+.spotlight.green .sp-kicker{color:var(--mcgreen)}
+.spotlight .sp-rank-badge{position:absolute;top:10px;right:12px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.06em;color:var(--text3);text-transform:uppercase}
+
+/* STANDINGS TABLE */
+.standings{font-size:12.5px}
+.standings .st-row{display:grid;grid-template-columns:34px minmax(0,1.4fr) 56px 64px 60px 70px 1fr;gap:10px;align-items:center;padding:9px 8px;border-bottom:1px solid var(--border)}
+.standings .st-row:last-child{border-bottom:none}
+.standings .st-head{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border2)}
+.standings .st-row.win{background:var(--mcyellow-light)}
+.standings .st-rank{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;color:var(--text3);text-align:center}
+.standings .st-rank.r1{color:var(--mcyellow-dark)}
+.standings .st-name{font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.standings .st-name .sub{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text3);font-weight:400}
+.standings .st-num{font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;text-align:right}
+.standings .st-score{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;text-align:right;font-variant-numeric:tabular-nums}
+.standings .st-bar-wrap{display:flex;align-items:center;gap:8px}
+.standings .st-bar-track{flex:1;height:7px;background:var(--mcgreen-light);border-radius:4px;overflow:hidden}
+.standings .st-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--mcgreen),#2d8a4e)}
+.standings .st-wow{display:flex;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10px}
+.standings .st-wow .chg{display:flex;flex-direction:column;line-height:1.2}
+.standings .st-wow .chg .cv{font-weight:700;font-variant-numeric:tabular-nums}
+.standings .st-wow .chg .cl{font-size:7.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text3)}
+.standings .up{color:var(--green)} .standings .down{color:var(--red)} .standings .flat{color:var(--text3)}
+.standings .st-note{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text3);padding:8px;font-style:italic}
+@media(max-width:760px){.standings .st-row{grid-template-columns:28px 1fr 50px 56px;}.standings .st-med,.standings .st-stale,.standings .st-wowcol{display:none}}
 @media(max-width:1100px){.r2,.r3,.r23,.r32{grid-template-columns:1fr} .kpis{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.kpis{grid-template-columns:repeat(2,1fr)} .topbar{flex-direction:column;gap:8px;align-items:flex-start} .topbar .meta{flex-wrap:wrap}}
 </style>
@@ -195,6 +236,14 @@ tbody tr:last-child td{border-bottom:none}
 <!-- ==================== OVERVIEW ==================== -->
 <div class="page active" id="page-overview">
   <div class="kpis" id="kpis"></div>
+  <div class="row r2" id="recognitionRow">
+    <div class="spotlight gold" id="ownerOfWeek"></div>
+    <div class="spotlight green" id="mostImproved"></div>
+  </div>
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-head"><h3>Owner Standings</h3><div class="hint">Health score · qualifying owners (20+ WOs)</div></div>
+    <div class="card-body standings" id="standingsBody"></div>
+  </div>
   <div class="row r2">
     <div class="card"><div class="card-head"><h3>Aging Distribution</h3><div class="hint">Days in status</div></div><div class="card-body" id="ageBars"></div></div>
     <div class="card"><div class="card-head"><h3>Class Mix</h3><div class="hint">WO type breakdown</div></div><div class="card-body"><div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap"><div class="donut-wrap"><svg viewBox="0 0 140 140" id="donut"></svg><div class="donut-center"><div><div class="num" id="d-num"></div><div class="lbl">Total</div></div></div></div><div class="legend" id="classLegend"></div></div></div></div>
@@ -432,6 +481,120 @@ document.getElementById('ownerAgeBars').innerHTML = ownerAge.map(x => {
     <div><div class="age-owner-val">${x.avgAge}<span class="unit">d</span></div><div class="age-owner-detail">med ${x.medianAge} · max ${x.maxAge}</div></div>
   </div>`;
 }).join('');
+
+// ===== OWNER RANKING / RECOGNITION =====
+const prevAssignees = [
+  {name:'Brenda Garcia',count:167,avgAge:15.8,medianAge:9,maxAge:67,over30:32},
+  {name:'Ryan Kelm',count:153,avgAge:11.1,medianAge:5,maxAge:115,over30:16},
+  {name:'Caleb Sloan',count:125,avgAge:12.2,medianAge:9,maxAge:95,over30:13},
+  {name:'John Grimsley',count:81,avgAge:16.3,medianAge:10,maxAge:170,over30:7},
+  {name:'Fleet Management',count:3,avgAge:1.0,medianAge:0,maxAge:3,over30:0}
+];
+const MIN_CASELOAD = 20;
+const SCORE_W = {stale:0.45, avg:0.35, med:0.20};
+const EXCLUDED_OWNERS = ['Fleet Management','Fleet Mangement'];
+
+function buildStandings() {
+  const prevMap = Object.fromEntries(prevAssignees.map(a => [a.name, a]));
+  const qual = data.assignees
+    .filter(a => a.count >= MIN_CASELOAD && !EXCLUDED_OWNERS.includes(a.name))
+    .map(a => ({...a, staleRate: a.count ? Math.round(a.over30 / a.count * 1000) / 10 : 0}));
+
+  const minmax = key => {
+    const vs = qual.map(a => a[key]); const lo = Math.min(...vs), hi = Math.max(...vs);
+    return v => hi > lo ? 100 * (1 - (v - lo) / (hi - lo)) : 100;
+  };
+  const nAvg = minmax('avgAge'), nMed = minmax('medianAge'), nStale = minmax('staleRate');
+
+  qual.forEach(a => {
+    a.score = Math.round((nStale(a.staleRate)*SCORE_W.stale + nAvg(a.avgAge)*SCORE_W.avg + nMed(a.medianAge)*SCORE_W.med) * 10) / 10;
+    const p = prevMap[a.name];
+    if (p) {
+      const pStale = p.count ? p.over30 / p.count * 100 : 0;
+      a.dAvg = Math.round((a.avgAge - p.avgAge) * 10) / 10;
+      a.dStaleRate = Math.round((a.staleRate - pStale) * 10) / 10;
+      // improvement: positive = got better (lower avg age + lower stale rate)
+      a.improve = Math.round((-(a.dStaleRate * 0.6 + a.dAvg * 0.4)) * 10) / 10;
+      a.hasPrev = true;
+    } else { a.improve = null; a.hasPrev = false; }
+  });
+  qual.sort((x, y) => y.score - x.score);
+  return qual;
+}
+
+const standings = buildStandings();
+const champ = standings[0];
+// Most Improved skips the Weekly Winner so two different people are recognized.
+// To let the winner hold both, change the filter to: standings.filter(a => a.hasPrev)
+const improved = standings
+  .filter(a => a.hasPrev && (!champ || a.name !== champ.name))
+  .sort((a, b) => b.improve - a.improve)[0];
+
+// Spotlight: Weekly Winner
+if (champ) {
+  document.getElementById('ownerOfWeek').innerHTML = `
+    <div class="medal">&#127942;</div>
+    <div class="sp-body">
+      <div class="sp-kicker">Weekly Winner</div>
+      <div class="sp-name">${esc(champ.name)}</div>
+      <div class="sp-why">Leads on health score &mdash; lowest average age and stale rate among ${standings.length} qualifying owners.</div>
+      <div class="sp-stats">
+        <div class="sp-stat"><span class="v">${champ.score}</span><span class="l">Score</span></div>
+        <div class="sp-stat"><span class="v">${champ.avgAge}d</span><span class="l">Avg Age</span></div>
+        <div class="sp-stat"><span class="v">${champ.staleRate}%</span><span class="l">Stale 30+</span></div>
+        <div class="sp-stat"><span class="v">${fmt(champ.count)}</span><span class="l">Open WOs</span></div>
+      </div>
+    </div>`;
+}
+
+// Spotlight: Most Improved
+if (improved) {
+  const avgTxt = improved.dAvg <= 0 ? `avg age down ${Math.abs(improved.dAvg)}d` : `avg age up ${improved.dAvg}d`;
+  const stTxt = improved.dStaleRate <= 0 ? `stale rate down ${Math.abs(improved.dStaleRate)} pts` : `stale rate up ${improved.dStaleRate} pts`;
+  document.getElementById('mostImproved').innerHTML = `
+    <div class="medal">&#128200;</div>
+    <div class="sp-body">
+      <div class="sp-kicker">Most Improved</div>
+      <div class="sp-name">${esc(improved.name)}</div>
+      <div class="sp-why">Biggest week-over-week gain &mdash; ${avgTxt}, ${stTxt}.</div>
+      <div class="sp-stats">
+        <div class="sp-stat"><span class="v" style="color:${improved.dAvg<=0?'var(--green)':'var(--red)'}">${improved.dAvg<=0?'\u25BC':'\u25B2'} ${Math.abs(improved.dAvg)}d</span><span class="l">Avg Age WoW</span></div>
+        <div class="sp-stat"><span class="v" style="color:${improved.dStaleRate<=0?'var(--green)':'var(--red)'}">${improved.dStaleRate<=0?'\u25BC':'\u25B2'} ${Math.abs(improved.dStaleRate)}</span><span class="l">Stale % WoW</span></div>
+        <div class="sp-stat"><span class="v">${improved.score}</span><span class="l">Score Now</span></div>
+      </div>
+    </div>`;
+}
+
+// Standings table
+function wowCell(d, suffix) {
+  if (d === undefined || d === null) return '<span class="flat">&mdash;</span>';
+  if (d === 0) return `<span class="flat">&ndash;0${suffix}</span>`;
+  const better = d < 0;
+  return `<span class="${better?'up':'down'}">${better?'\u25BC':'\u25B2'}${Math.abs(d)}${suffix}</span>`;
+}
+const impName = improved ? improved.name : null;
+document.getElementById('standingsBody').innerHTML =
+  `<div class="st-row st-head"><div>Rank</div><div>Owner</div><div class="st-num">Open</div><div class="st-num">Avg Age</div><div class="st-num st-med">Median</div><div class="st-num st-stale">Stale %</div><div class="st-wowcol">Score &amp; WoW change</div></div>` +
+  standings.map((a, i) => `
+    <div class="st-row ${i===0?'win':''}">
+      <div class="st-rank ${i===0?'r1':''}">${i===0?'&#127942;':'#'+(i+1)}</div>
+      <div class="st-name">${esc(a.name)} ${a.name===impName?'<span class="sub">&middot; most improved</span>':''}<div class="sub">${fmt(a.count)} open WOs</div></div>
+      <div class="st-num">${fmt(a.count)}</div>
+      <div class="st-num">${a.avgAge}d</div>
+      <div class="st-num st-med">${a.medianAge}d</div>
+      <div class="st-num st-stale">${a.staleRate}%</div>
+      <div class="st-wowcol">
+        <div class="st-bar-wrap">
+          <div class="st-bar-track"><div class="st-bar" style="width:${a.score}%"></div></div>
+          <div class="st-score">${a.score}</div>
+        </div>
+        <div class="st-wow">
+          <div class="chg"><span class="cv">${wowCell(a.dAvg,'d')}</span><span class="cl">avg age</span></div>
+          <div class="chg"><span class="cv">${wowCell(a.dStaleRate,'')}</span><span class="cl">stale %</span></div>
+        </div>
+      </div>
+    </div>`).join('') +
+  `<div class="st-note">Score weights stale rate 45% &middot; avg age 35% &middot; median age 20%, each normalized across qualifying owners. Owners under ${MIN_CASELOAD} open WOs are excluded. WoW change is vs the 6/8 report.</div>`;
 
 // FLAGGED TAB
 let fOverdue = 0, fNofu = 0;
