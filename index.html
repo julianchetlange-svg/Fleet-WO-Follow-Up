@@ -291,7 +291,7 @@ tbody tr:last-child td{border-bottom:none}
 <!-- ==================== ROLLING 30-DAY RECAP ==================== -->
 <div class="page" id="page-recap">
   <div style="margin-bottom:14px;font-size:12.5px;color:var(--text2)" id="recapIntro"></div>
-  <div class="recap-grid" id="recapTrends"></div>
+  <div class="recap-grid big" id="recapTrends"></div>
   <div class="rank-hero" id="recapHero"></div>
   <div class="card"><div class="card-head"><h3>Last 30 Days Leaderboard</h3><div class="hint" id="recapLbHint"></div></div><div class="tbl-wrap"><table class="month-lb" id="monthLbTbl"><thead><tr id="monthLbHead"></tr></thead><tbody></tbody></table></div></div>
   <div class="method-note" id="recapNote" style="margin-top:12px"></div>
@@ -937,10 +937,10 @@ function trendCard(label, vals, unit, lowerBetter, sinceWeek, rollingDays, big, 
   </div>`;
 }
 document.getElementById('recapTrends').innerHTML =
-  trendCard('Open WO Count', kpiWindow.map(e=>e.total), '', null, kpiWindow[0].week, ROLLING_DAYS) +
-  trendCard('Overall Avg Age', kpiWindow.map(e=>e.avgAge), 'd', true, kpiWindow[0].week, ROLLING_DAYS) +
-  trendCard('Repair Avg Age', kpiWindow.map(e=>e.repairAvgAge), 'd', true, kpiWindow[0].week, ROLLING_DAYS) +
-  trendCard('Flagged WOs', kpiWindow.map(e=>e.flagged), '', true, kpiWindow[0].week, ROLLING_DAYS);
+  trendCard('Open WO Count', kpiWindow.map(e=>e.total), '', null, kpiWindow[0].week, ROLLING_DAYS, true, kpiWindow.map(e=>e.week)) +
+  trendCard('Overall Avg Age', kpiWindow.map(e=>e.avgAge), 'd', true, kpiWindow[0].week, ROLLING_DAYS, true, kpiWindow.map(e=>e.week)) +
+  trendCard('Repair Avg Age', kpiWindow.map(e=>e.repairAvgAge), 'd', true, kpiWindow[0].week, ROLLING_DAYS, true, kpiWindow.map(e=>e.week)) +
+  trendCard('Flagged WOs', kpiWindow.map(e=>e.flagged), '', true, kpiWindow[0].week, ROLLING_DAYS, true, kpiWindow.map(e=>e.week));
 
 const monthAvg = {};
 Object.keys(scoreWindowByOwner).forEach(nm => {
